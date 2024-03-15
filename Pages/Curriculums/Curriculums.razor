@@ -1,0 +1,33 @@
+﻿@page "/curriculums"
+@using Clarity_Crate.Services
+@using Clarity_Crate.Models
+@inject CurriculumService CurriculumService
+
+
+<div class="mt-5 text-center">
+    <h1>Curriculums</h1>
+
+    <div class="d-flex justify-content-end"><MudButton StartIcon="@Icons.Material.Filled.Add" Href="/add-curriculum" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Add curriculum</MudButton></div>
+
+    <CurriculumList />
+</div>
+
+
+
+
+@code {
+
+
+
+
+
+    //get all the curriculums when the component is initialized
+    //using the CurriculumService
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+
+
+}

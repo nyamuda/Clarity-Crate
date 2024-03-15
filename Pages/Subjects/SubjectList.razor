@@ -1,0 +1,104 @@
+﻿@using Clarity_Crate.Services
+@using Clarity_Crate.Models
+@inject SubjectService SubjectService
+@inject NavigationManager NavigationManager
+
+
+
+<!--list of subjects-->
+<div class="row subject-list">
+    <div class="col mt-5 subject-list m-auto">
+        <ul class="list-group list-group-flush">
+            @foreach (var subject in subjects)
+            {
+                <!-- display the name of each subject and the delete and edit actions -->
+                <li class="list-group-item d-flex align-items-center ">
+                   <div class="d-flex flex-column align-item-start">
+                       <div class="d-flex justify-content-start align-content-center flex-wrap">
+                            <p class="me-4 fw-bold">@subject.Name</p>
+
+                            <!-- pass the id of the subject to the edit method -->
+                            <MudLink Class="mx-2" OnClick="() => Edit(subject.Id)" Underline="Underline.None" Typo="Typo.body2">Edit</MudLink>
+                            <!-- pass the id of the subject to the delete method -->
+                            <MudLink OnClick="() => Delete(subject.Id)" Underline="Underline.None" Typo="Typo.body2">Delete</MudLink>
+                       </div>
+                       <div class="d-flex justify-content-evenly">
+                           @foreach(var curriculum in subject.Curriculums)
+                           {
+                                <MudListItem Avatar="@Icons.Material.Filled.MenuBook">@curriculum.Name</MudListItem>
+                           }
+                       </div>
+                   </div>
+                </li>
+               
+
+            }
+        </ul>
+    </div>
+
+   
+</div>
+
+
+
+
+
+
+<!--update curriculum dialog-->
+@code {
+    private List<Subject> subjects = new List<Subject>();
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    
+
+
+
+
+
+
+    //get all the subjects component is initialized
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SubjectService.GetSubjects();
+        subjects= SubjectService.Subjects;
+
+
+    }
+
+
+    //delete method
+    private async Task Delete(int id)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+          "Delete?",
+          "Are you certain you wish to delete this subject?",
+          yesText: "Delete", cancelText: "Cancel");
+
+        var state = result == null ? "Cancel" : "Delete";
+        Console.WriteLine(state);
+        //if result is not null, then its confirmed
+        if (state.Equals("Delete"))
+        {
+            await SubjectService.DeleteSubject(id);
+            await SubjectService.GetSubjects();
+            subjects= SubjectService.Subjects;
+
+            StateHasChanged();
+        }
+
+
+    }
+    //edit method
+    private void Edit(int id)
+    {
+
+        //redirect to the edit page
+        NavigationManager.NavigateTo($"/subjects/edit/{id}");
+    }
+
+   
+
+
+}
