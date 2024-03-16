@@ -11,7 +11,7 @@ The purpose of developing this software is to create a tool that supports scienc
 As a software engineer, my goal is to leverage C# to build a functional and user-friendly application that enhances the learning experience for high school students studying science subjects like physics and chemistry.
 
 
-[Software Demo Video] (https://youtu.be/IjiiU_o3Kxk)
+[Software Demo Video] (https://youtu.be/dj9DvsEJdF4)
 
 # Development Environment
 
