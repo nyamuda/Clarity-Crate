@@ -25,7 +25,7 @@
         </div>
 
         <MudSelect Required T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="TopicDto.SelectedTopics">
-            @foreach (var subject in TopicDto.SelectedTopics)
+            @foreach (var subject in AllSubjects)
             {
                 <MudSelectItem  T="Subject" Value="@subject">@subject.Name</MudSelectItem>
             }
@@ -52,6 +52,7 @@
 </div>
 @code {
     private TopicUpdateDto TopicDto { get; set; } = new TopicUpdateDto();
+    private List<Subject> AllSubjects { get; set; } = new List<Subject>();
     [Parameter]
     public int TopicId { get; set; }
 
@@ -77,7 +78,12 @@
     {
         //get the topic to be edited
         Topic topic = await TopicService.GetTopicById(TopicId);
+        //get all subjects
+        await SubjectService.GetSubjects();
+        AllSubjects = SubjectService.Subjects;
 
+
+        //initialize the TopicDto
         TopicDto = new TopicUpdateDto()
         {
             Name = topic.Name,
