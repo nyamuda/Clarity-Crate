@@ -8,6 +8,6 @@ public class TopicCreateDto
     public string? Name { get; set; }
 
     [Required]
-    public List<Subject>? Subjects { get; set; }
+    public IEnumerable<Subject> SelectedTopics { get; set; } = new List<Subject>();
 
 }

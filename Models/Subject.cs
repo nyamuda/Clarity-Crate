@@ -8,5 +8,6 @@
         public string? Name { get; set; }
 
         public List<Curriculum> Curriculums { get; } = new List<Curriculum>();
+        public List<Topic> Topics { get; } = new List<Topic>();
     }
 }

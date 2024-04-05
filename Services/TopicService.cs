@@ -7,6 +7,7 @@ namespace Clarity_Crate.Services
     public class TopicService
     {
         private readonly ApplicationDbContext _context;
+        public List<Topic> Topics { get; set; } = new List<Topic>();
         public bool isProcessing = false;
 
 
@@ -16,9 +17,10 @@ namespace Clarity_Crate.Services
         }
 
 
-        public async Task<List<Topic>> GetTopic()
+        public async Task GetTopics()
         {
-            return await _context.Topic.ToListAsync();
+            Topics = await _context.Topic.Include(t => t.Subjects).ToListAsync();
+
         }
 
         public async Task<Topic?> GetTopicById(int id)

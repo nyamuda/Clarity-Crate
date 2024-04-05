@@ -1,5 +1,103 @@
-﻿<h3>TopicList</h3>
+﻿@using Clarity_Crate.Services
+@using Clarity_Crate.Models
+@inject TopicService TopicService
+@inject NavigationManager NavigationManager
 
+
+
+
+<div class="m-auto mt-3">
+    <!--MudBlazor table that show a list of topics -->
+    <!--Each topic shows its subjects-->
+    <MudTable Items="topics" Class="table" Hover="true">
+        <HeaderContent>
+            <MudTh>Topic</MudTh>
+            <MudTh>Subjects</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>
+                <!--Loop through the subjects-->
+                @foreach (var subject in context.Subjects)
+                {
+                    <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@subject.Name</MudChip>
+                }
+
+            </MudTd>
+            <MudTd>
+
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" IconColor="Color.Primary" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+                <MudButton Class="ms-2" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(context.Id))">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+
+
+</div>
+
+
+
+
+
+
+<!--update curriculum dialog-->
 @code {
+    private List<Topic> topics = new List<Topic>();
+
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+
+
+
+
+
+
+
+    //get all the topics component is initialized
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TopicService.GetTopics();
+        topics = TopicService.Topics;
+
+
+    }
+
+
+    //delete method
+    private async Task Delete(int id)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+          "Delete?",
+          "Are you certain you wish to delete this topic?",
+          yesText: "Delete", cancelText: "Cancel");
+
+        var state = result == null ? "Cancel" : "Delete";
+       
+        //if result is not null, then its confirmed
+        if (state.Equals("Delete"))
+        {
+            await TopicService.DeleteTopic(id);
+            await TopicService.GetTopics();
+            topics = TopicService.Topics;
+
+            StateHasChanged();
+        }
+
+
+    }
+    //edit method
+    private void Edit(int id)
+    {
+
+        //redirect to the edit page
+        NavigationManager.NavigateTo($"/topics/edit/{id}");
+    }
+
+
+
 
 }

@@ -9,7 +9,7 @@
 
 
 <div class="container text-start m-auto">
-    <h2>Add a new Topic</h2>
+    <h2>Add a new topic</h2>
 
     <EditForm Model="@TopicDto" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
@@ -25,7 +25,7 @@
 
         </div>
 
-        <MudSelect Required T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="selectedSubjects">
+        <MudSelect Required T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="TopicDto.SelectedTopics">
             @foreach (var subject in subjects)
             {
                 <MudSelectItem T="Subject" Value="@subject">@subject.Name</MudSelectItem>
@@ -55,7 +55,7 @@
     private TopicCreateDto TopicDto { get; set; } = new TopicCreateDto();
 
     private List<Subject> subjects = new List<Subject>();
-    private IEnumerable<Subject> selectedSubjects { get; set; } = new List<Subject>();
+   
 
     private async Task HandleValidSubmit()
     {
@@ -63,7 +63,7 @@
         Topic topic= new Topic()
         {
             Name = TopicDto.Name, 
-            Subjects = selectedSubjects.ToList() 
+            Subjects = TopicDto.SelectedTopics.ToList()
         };
         await TopicService.CreateTopic(topic);
 
