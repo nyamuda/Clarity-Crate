@@ -38,7 +38,7 @@ namespace Clarity_Crate.Services
         }
 
 
-        public async Task UpdateTopic(int id, Topic topic)
+        public async Task<Boolean> UpdateTopic(int id, Topic topic)
         {
             Topic topicExists = await _context.Topic.FindAsync(id);
             if (topicExists != null)
@@ -46,14 +46,22 @@ namespace Clarity_Crate.Services
                 topicExists.Name = topic.Name;
                 topicExists.Subjects = topic.Subjects;
                 await _context.SaveChangesAsync();
+                return true;
             }
+
+            return false;
         }
 
-        public async Task DeleteTopic(int id)
+        public async Task<Boolean> DeleteTopic(int id)
         {
             var topic = await _context.Topic.FindAsync(id);
-            _context.Topic.Remove(topic);
-            await _context.SaveChangesAsync();
+            if (topic != null)
+            {
+                _context.Topic.Remove(topic);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
     }
 }

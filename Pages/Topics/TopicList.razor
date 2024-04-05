@@ -1,6 +1,7 @@
 ﻿@using Clarity_Crate.Services
 @using Clarity_Crate.Models
 @inject TopicService TopicService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 
@@ -76,15 +77,28 @@
           yesText: "Delete", cancelText: "Cancel");
 
         var state = result == null ? "Cancel" : "Delete";
-       
+
         //if result is not null, then its confirmed
         if (state.Equals("Delete"))
         {
-            await TopicService.DeleteTopic(id);
-            await TopicService.GetTopics();
-            topics = TopicService.Topics;
+            bool isSuccess=  await TopicService.DeleteTopic(id);
+            if(isSuccess)
+            {
 
-            StateHasChanged();
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+                Snackbar.Add("Topic deleted successfully!", Severity.Success);
+
+                await TopicService.GetTopics();
+                topics = TopicService.Topics;
+
+
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+                Snackbar.Add("An error occurred while deleting the topic", Severity.Error);
+            }
         }
 
 

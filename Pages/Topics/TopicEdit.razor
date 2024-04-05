@@ -3,6 +3,7 @@
 @using Clarity_Crate.Services
 @using Clarity_Crate.Dtos
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 @using Clarity_Crate.Models
 @page "/topics/edit/{topicId:int}"
 
@@ -24,7 +25,7 @@
 
         </div>
 
-        <MudSelect Required T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="TopicDto.SelectedTopics">
+        <MudSelect T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="TopicDto.SelectedTopics">
             @foreach (var subject in AllSubjects)
             {
                 <MudSelectItem  T="Subject" Value="@subject">@subject.Name</MudSelectItem>
@@ -41,14 +42,10 @@
             }
             else
             {
-                <MudText>Create</MudText>
+                <MudText>Update topic</MudText>
             }
         </MudButton>
     </EditForm>
-
-
-
-
 </div>
 @code {
     private TopicUpdateDto TopicDto { get; set; } = new TopicUpdateDto();
@@ -68,7 +65,18 @@
                 Name = TopicDto.Name,
                 Subjects = TopicDto.SelectedTopics.ToList()
             };
-        await TopicService.UpdateTopic(TopicId, topic);
+        bool isSuccess=  await TopicService.UpdateTopic(TopicId, topic);
+
+        if(isSuccess)
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            Snackbar.Add("Topic updated successfully", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+            Snackbar.Add("An error occurred while updating the topic", Severity.Error);
+        }
 
         //redirect to the curriculums page
         NavigationManager.NavigateTo("/topics");
