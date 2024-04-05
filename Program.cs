@@ -1,11 +1,8 @@
 using Clarity_Crate.Areas.Identity;
 using Clarity_Crate.Data;
 using Clarity_Crate.Services;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -28,6 +25,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<CurriculumService>();
+builder.Services.AddScoped<TopicService>();
 
 
 
