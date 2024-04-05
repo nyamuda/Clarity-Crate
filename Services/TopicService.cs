@@ -38,11 +38,15 @@ namespace Clarity_Crate.Services
         }
 
 
-        public async Task<Topic> UpdateTopic(int id, Topic topic)
+        public async Task UpdateTopic(int id, Topic topic)
         {
-            _context.Entry(topic).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return topic;
+            Topic topicExists = await _context.Topic.FindAsync(id);
+            if (topicExists != null)
+            {
+                topicExists.Name = topic.Name;
+                topicExists.Subjects = topic.Subjects;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteTopic(int id)

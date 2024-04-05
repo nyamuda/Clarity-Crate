@@ -11,3 +11,15 @@ public class TopicCreateDto
     public IEnumerable<Subject> SelectedTopics { get; set; } = new List<Subject>();
 
 }
+
+
+public class TopicUpdateDto
+{
+
+    [Required]
+    public string? Name { get; set; }
+
+    [Required]
+    public IEnumerable<Subject> SelectedTopics { get; set; } = new List<Subject>();
+
+}
