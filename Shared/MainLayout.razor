@@ -14,7 +14,7 @@
             <MudAppBar Elevation="1">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor" Target="_blank" />
+                <!-- <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor" Target="_blank" />-->
             </MudAppBar>
             <MudDrawer @bind-Open="@open" ClipMode="clipMode" Elevation="1">
                 <MudDrawerHeader>
@@ -24,6 +24,7 @@
                     <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
                     <MudNavLink Href="/curriculums" Match="NavLinkMatch.All">Curriculums</MudNavLink>
                     <MudNavLink Href="/subjects" Match="NavLinkMatch.All">Subjects</MudNavLink>
+                    <MudNavLink Href="/topics" Match="NavLinkMatch.All">Topics</MudNavLink>
 
                 </MudNavMenu>
             </MudDrawer>
