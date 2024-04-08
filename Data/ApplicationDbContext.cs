@@ -17,6 +17,8 @@ namespace Clarity_Crate.Data
 
         public DbSet<Topic> Topic { get; set; } = default!;
 
+        public DbSet<Term> Term { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,10 +31,20 @@ namespace Clarity_Crate.Data
                 .UsingEntity(j => j.ToTable("CurriculumSubject"));
 
 
+            //there is a many to many relationship between subject and topic
             builder.Entity<Topic>()
                .HasMany(t => t.Subjects)
                .WithMany(s => s.Topics)
                .UsingEntity(j => j.ToTable("TopicSubject"));
+
+
+
+            ///there is a many to one relationship between topic and term
+            builder.Entity<Term>()
+                .HasOne(t => t.Topic)
+                .WithMany(t => t.Terms)
+                .HasForeignKey(t => t.TopicId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
         }
