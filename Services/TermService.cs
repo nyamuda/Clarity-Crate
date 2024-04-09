@@ -7,6 +7,8 @@ namespace Clarity_Crate.Services
     public class TermService
     {
         private readonly ApplicationDbContext _context;
+        public List<Term> Terms { get; set; } = new List<Term>();
+        public bool isProcessing = false;
 
         public TermService(ApplicationDbContext context)
         {
@@ -14,31 +16,30 @@ namespace Clarity_Crate.Services
         }
 
         //CREATE
-        public async Task<Boolean> AddTerm(Term term)
+        public async Task CreateTerm(Term term, Definition definition)
         {
-            //check if the term already exists case insensitive
-            var termExists = await _context.Term.AnyAsync(t => t.Name.ToLower() == term.Name.ToLower());
-            if (termExists)
-            {
-                return false;
-            }
-            //check if the topic for term exists
-            var topic = await _context.Topic.FirstOrDefaultAsync(t => t.Id == term.TopicId);
-            if (topic == null)
-            {
-                return false;
-            }
-            else
-            {
-                _context.Add(term);
-                await _context.SaveChangesAsync();
-                return true;
-            }
+            isProcessing = !isProcessing;
+
+            //first save the term and add the saved term to the definition
+            //save the term and get the id
+            _context.Add(term);
+            await _context.SaveChangesAsync();
+            var termId = term.Id;
+
+
+            //add the term id to the definition
+            definition.TermId = termId;
+
+            //save the definition
+            _context.Add(definition);
+            await _context.SaveChangesAsync();
+
+
         }
         //READ
-        public async Task<List<Term>> GetTerms()
+        public async Task GetTerms()
         {
-            return await _context.Term.ToListAsync();
+            Terms = await _context.Term.ToListAsync();
         }
 
         public async Task<Term?> GetTermById(int id)

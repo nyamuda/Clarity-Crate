@@ -7,8 +7,8 @@
 
         public string? Name { get; set; }
 
-        public Topic? Topic { get; set; }
+        public List<Definition>? Definitions { get; set; } = new List<Definition>();
 
-        public int TopicId { get; set; }
+
     }
 }

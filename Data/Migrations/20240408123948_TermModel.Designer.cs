@@ -4,6 +4,7 @@ using Clarity_Crate.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clarity_Crate.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240408123948_TermModel")]
+    partial class TermModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,42 +39,6 @@ namespace Clarity_Crate.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Curriculum");
-                });
-
-            modelBuilder.Entity("Clarity_Crate.Models.Definition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CurriculumId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TermId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TopicId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurriculumId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.HasIndex("TermId");
-
-                    b.HasIndex("TopicId");
-
-                    b.ToTable("Definition");
                 });
 
             modelBuilder.Entity("Clarity_Crate.Models.Subject", b =>
@@ -99,10 +65,18 @@ namespace Clarity_Crate.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Definition")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TopicId");
 
                     b.ToTable("Term");
                 });
@@ -355,37 +329,13 @@ namespace Clarity_Crate.Data.Migrations
                     b.ToTable("TopicSubject", (string)null);
                 });
 
-            modelBuilder.Entity("Clarity_Crate.Models.Definition", b =>
+            modelBuilder.Entity("Clarity_Crate.Models.Term", b =>
                 {
-                    b.HasOne("Clarity_Crate.Models.Curriculum", "Curriculum")
-                        .WithMany("Definitions")
-                        .HasForeignKey("CurriculumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clarity_Crate.Models.Subject", "Subject")
-                        .WithMany("Definitions")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clarity_Crate.Models.Term", "Term")
-                        .WithMany("Definitions")
-                        .HasForeignKey("TermId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Clarity_Crate.Models.Topic", "Topic")
-                        .WithMany("Definitions")
+                        .WithMany("Terms")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Curriculum");
-
-                    b.Navigation("Subject");
-
-                    b.Navigation("Term");
 
                     b.Navigation("Topic");
                 });
@@ -471,24 +421,9 @@ namespace Clarity_Crate.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Clarity_Crate.Models.Curriculum", b =>
-                {
-                    b.Navigation("Definitions");
-                });
-
-            modelBuilder.Entity("Clarity_Crate.Models.Subject", b =>
-                {
-                    b.Navigation("Definitions");
-                });
-
-            modelBuilder.Entity("Clarity_Crate.Models.Term", b =>
-                {
-                    b.Navigation("Definitions");
-                });
-
             modelBuilder.Entity("Clarity_Crate.Models.Topic", b =>
                 {
-                    b.Navigation("Definitions");
+                    b.Navigation("Terms");
                 });
 #pragma warning restore 612, 618
         }

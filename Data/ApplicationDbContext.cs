@@ -39,13 +39,34 @@ namespace Clarity_Crate.Data
 
 
 
-            ///there is a many to one relationship between topic and term
-            builder.Entity<Term>()
-                .HasOne(t => t.Topic)
-                .WithMany(t => t.Terms)
-                .HasForeignKey(t => t.TopicId)
+            //there is a one-many relationship between definition and topic
+            builder.Entity<Definition>()
+                .HasOne(d => d.Topic)
+                .WithMany(t => t.Definitions)
+                .HasForeignKey(d => d.TopicId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            //there is a one-many relationship between definition and curriculum
+            builder.Entity<Definition>()
+                .HasOne(d => d.Curriculum)
+                .WithMany(c => c.Definitions)
+                .HasForeignKey(d => d.CurriculumId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //there is a one-many relationship between definition and subject
+            builder.Entity<Definition>()
+                .HasOne(d => d.Subject)
+                .WithMany(s => s.Definitions)
+                .HasForeignKey(d => d.SubjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            //there is a one-many relationship between definition and term
+            builder.Entity<Definition>()
+                .HasOne(d => d.Term)
+                .WithMany(t => t.Definitions)
+                .HasForeignKey(d => d.TermId)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

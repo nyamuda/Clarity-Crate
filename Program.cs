@@ -26,6 +26,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<SubjectService>();
 builder.Services.AddScoped<CurriculumService>();
 builder.Services.AddScoped<TopicService>();
+builder.Services.AddScoped<TermService>();
 
 
 

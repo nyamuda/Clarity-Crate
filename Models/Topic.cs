@@ -9,7 +9,7 @@
         public List<Subject> Subjects { get; set; } = new List<Subject>();
 
 
-        public List<Term> Terms { get; set; } = new List<Term>();
+        public List<Definition> Definitions { get; set; } = new List<Definition>();
 
 
     }

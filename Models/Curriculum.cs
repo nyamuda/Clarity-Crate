@@ -11,5 +11,7 @@ namespace Clarity_Crate.Models
         public string? Name { get; set; }
 
         public List<Subject> Subjects { get; } = new List<Subject>();
+
+        public List<Definition> Definitions { get; set; } = new List<Definition>();
     }
 }
