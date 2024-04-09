@@ -31,15 +31,19 @@ namespace Clarity_Crate.Services
             definition.TermId = termId;
 
             //save the definition
-            _context.Add(definition);
+            _context.Definition.Add(definition);
             await _context.SaveChangesAsync();
+
+            isProcessing = !isProcessing;
+
 
 
         }
         //READ
         public async Task GetTerms()
         {
-            Terms = await _context.Term.ToListAsync();
+            //get all terms with their definitions
+            Terms = await _context.Term.Include(t => t.Definitions).ToListAsync();
         }
 
         public async Task<Term?> GetTermById(int id)
@@ -55,14 +59,27 @@ namespace Clarity_Crate.Services
         }
 
         //DELETE
-        public async Task DeleteTerm(int id)
+        public async Task<Boolean> DeleteTerm(int id)
         {
             var term = await GetTermById(id);
             if (term != null)
             {
                 _context.Remove(term);
                 await _context.SaveChangesAsync();
+
+                //remove all definitions associated with the term
+                var definitions = await _context.Definition.Where(d => d.TermId == id).ToListAsync();
+                foreach (var definition in definitions)
+                {
+                    _context.Remove(definition);
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
             }
+            return false;
+
+
         }
 
     }

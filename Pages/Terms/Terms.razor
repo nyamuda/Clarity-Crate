@@ -1,5 +1,13 @@
-﻿<h3>Terms</h3>
+﻿@page "/terms"
+<PageTitle>Terms</PageTitle>
 
-@code {
 
-}
+
+<div class="mt-5 text-center">
+    <h1>Terms</h1>
+
+    <div class="d-flex justify-content-end"><MudButton StartIcon="@Icons.Material.Filled.Add" Href="/add-term" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Add term</MudButton></div>
+
+    <TermList />
+</div>
+

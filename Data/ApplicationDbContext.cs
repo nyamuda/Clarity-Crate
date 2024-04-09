@@ -18,6 +18,7 @@ namespace Clarity_Crate.Data
         public DbSet<Topic> Topic { get; set; } = default!;
 
         public DbSet<Term> Term { get; set; } = default!;
+        public DbSet<Definition> Definition { get; set; } = default!;
 
 
         protected override void OnModelCreating(ModelBuilder builder)

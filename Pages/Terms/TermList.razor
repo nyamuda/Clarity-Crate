@@ -1,5 +1,117 @@
-﻿<h3>TermList</h3>
+﻿@using Clarity_Crate.Services
+@using Clarity_Crate.Models
+@inject TermService TermService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
+
+
+
+<div class="m-auto mt-3">
+    <!--MudBlazor table that show a list of Terms -->
+    <!--Each Term shows its subjects-->
+    <MudTable Items="Terms" Class="table" Hover="true">
+        <HeaderContent>
+            <MudTh>Term</MudTh>
+            <MudTh>Definitions</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.Name</MudTd>
+            <MudTd>
+                <!--Loop through the subjects-->
+                @foreach (var definitions in context.Definitions)
+                {
+                    <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@definitions.Content</MudChip>
+                }
+
+            </MudTd>
+            <MudTd>
+
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" IconColor="Color.Primary" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+                <MudButton Class="ms-2" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(context.Id))">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+
+
+</div>
+
+
+
+
+
+
+<!--update curriculum dialog-->
 @code {
+    private List<Term> Terms = new List<Term>();
+
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+
+
+
+
+
+
+
+    //get all the Terms component is initialized
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TermService.GetTerms();
+        Terms = TermService.Terms;
+
+
+    }
+
+
+    //delete method
+    private async Task Delete(int id)
+    {
+        bool? result = await DialogService.ShowMessageBox(
+          "Delete?",
+          "Are you certain you wish to delete this term?",
+          yesText: "Delete", cancelText: "Cancel");
+
+        var state = result == null ? "Cancel" : "Delete";
+
+        //if result is not null, then its confirmed
+        if (state.Equals("Delete"))
+        {
+            bool isSuccess = await TermService.DeleteTerm(id);
+            if (isSuccess)
+            {
+
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+                Snackbar.Add("Term deleted successfully!", Severity.Success);
+
+                await TermService.GetTerms();
+                Terms = TermService.Terms;
+
+
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
+                Snackbar.Add("An error occurred while deleting the Term", Severity.Error);
+            }
+        }
+
+
+    }
+    //edit method
+    private void Edit(int id)
+    {
+
+        //redirect to the edit page
+        NavigationManager.NavigateTo($"/Terms/edit/{id}");
+    }
+
+
+
 
 }
