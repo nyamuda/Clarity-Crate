@@ -10,15 +10,15 @@
 <div class="m-auto mt-3">
     <!--MudBlazor table that show a list of Terms -->
     <!--Each Term shows its subjects-->
-    <MudTable Items="Terms" Class="table" Hover="true">
+    <MudTable Items="Terms" Hover="true">
         <HeaderContent>
             <MudTh>Term</MudTh>
             <MudTh>Definitions</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd>@context.Name</MudTd>
-            <MudTd>
+            <MudTd DataLabel="Term">@context.Name</MudTd>
+            <MudTd DataLabel="Definitions">
                 <!--Loop through the subjects-->
                 @foreach (var definitions in context.Definitions)
                 {
@@ -26,12 +26,13 @@
                 }
 
             </MudTd>
-            <MudTd>
+            <MudTd DataLabel="Actions">
 
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" IconColor="Color.Primary" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
                 <MudButton Class="ms-2" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(context.Id))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
+        
     </MudTable>
 
 
