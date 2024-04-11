@@ -9,6 +9,7 @@ namespace Clarity_Crate.Services
         private readonly ApplicationDbContext _context;
         public List<Term> Terms { get; set; } = new List<Term>();
         public bool isProcessing = false;
+        public bool isGettingItems = false;
 
         public TermService(ApplicationDbContext context)
         {
@@ -42,8 +43,10 @@ namespace Clarity_Crate.Services
         //READ
         public async Task GetTerms()
         {
+            isGettingItems = !isGettingItems;
             //get all terms with their definitions
             Terms = await _context.Term.Include(t => t.Definitions).ToListAsync();
+            isGettingItems = !isGettingItems;
         }
 
         public async Task<Term?> GetTermById(int id)

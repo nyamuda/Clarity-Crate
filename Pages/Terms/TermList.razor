@@ -10,9 +10,14 @@
 <div class="m-auto mt-3">
     <!--MudBlazor table that show a list of Terms -->
     <!--Each Term shows its subjects-->
-    <MudTable Items="Terms" Hover="true">
+    <MudTable Items="Terms" Hover="true" Filter="new Func<Term,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Periodic Elements</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
         <HeaderContent>
-            <MudTh>Term</MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Term, object>(x=>x.Name)">Term</MudTableSortLabel></MudTh>
             <MudTh>Definitions</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
@@ -32,7 +37,11 @@
                 <MudButton Class="ms-2" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(context.Id))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
-        
+
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+
     </MudTable>
 
 
@@ -47,6 +56,8 @@
 <!--update curriculum dialog-->
 @code {
     private List<Term> Terms = new List<Term>();
+    private string searchString1 = "";
+    private Term selectedItem1 = null;
 
 
     [Inject] private IDialogService DialogService { get; set; }
@@ -112,7 +123,22 @@
         NavigationManager.NavigateTo($"/Terms/edit/{id}");
     }
 
+    private bool FilterFunc1(Term element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Term element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+      
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+       
+        return false;
+    }
+
 
 
 
 }
+
+

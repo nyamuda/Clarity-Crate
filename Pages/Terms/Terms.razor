@@ -1,4 +1,6 @@
 ﻿@page "/terms"
+@using Clarity_Crate.Services
+@inject TermService TermService
 <PageTitle>Terms</PageTitle>
 
 
@@ -8,6 +10,7 @@
 
     <div class="d-flex justify-content-end"><MudButton StartIcon="@Icons.Material.Filled.Add" Href="/add-term" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Add term</MudButton></div>
 
+   
     <TermList />
 </div>
 
