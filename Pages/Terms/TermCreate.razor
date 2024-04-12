@@ -1,5 +1,6 @@
 ﻿@inject TermService TermService
 @inject TopicService TopicService
+@inject LevelService LevelService
 @inject CurriculumService CurriculumService
 @inject SubjectService SubjectService
 @using Clarity_Crate.Services
@@ -35,8 +36,16 @@
 
 
         </div>
+
+        <!--Levels-->
+        <MudSelect Required T="Level" Label="Level" ToStringFunc="@levelConverter" MultiSelection="true" @bind-SelectedValues="TermDto.SelectedLevels">
+            @foreach (var level in levels)
+            {
+                <MudSelectItem T="Level" Value="@level">@level.Name</MudSelectItem>
+            }
+        </MudSelect>
         
-       
+       <!--Curriculums-->
         <MudSelect Required ValueChanged="FilterSubjects" HelperText="The curriculum the term falls under" T="Curriculum" Label="Curriculum" Variant="Variant.Text" ToStringFunc="@curriculumConverter">
             @foreach (var curriculum in curriculums)
             {
@@ -44,9 +53,9 @@
             }
         </MudSelect>
 
+
+        <!--Subjects-->
         <!--Disable the subject select input if not curriculum is selected-->
-
-
         <MudSelect Required disabled="@(TermDto.Curriculum==null)" ValueChanged="FilterTopics" HelperText="The subject the term falls under" T="Subject" Label="Subject" Variant="Variant.Text" ToStringFunc="@subjectConverter">
             @foreach (var subject in subjects)
             {
@@ -55,6 +64,7 @@
         </MudSelect>
 
 
+        <!--Topics-->
         <MudSelect Required disabled="@(TermDto.Subject==null)" @bind-Value="TermDto.Topic" HelperText="The topic the term falls under" T="Topic" Label="Topic" Variant="Variant.Text" ToStringFunc="@topicConverter">
             @foreach (var topic in topics)
             {
@@ -86,6 +96,7 @@
     private List<Topic> topics = new List<Topic>();
     private List<Subject> subjects= new List<Subject>();
     private List<Curriculum> curriculums=new List<Curriculum>();
+    private List<Level> levels= new List<Level>();
     
 
 
@@ -99,12 +110,14 @@
             CurriculumId=TermDto.Curriculum.Id,
             SubjectId=TermDto.Subject.Id
 
+
         };
 
         //then create a term
         Term term = new Term()
         {
             Name=TermDto.Name,
+            Levels=TermDto.SelectedLevels.ToList(),
 
         };
 
@@ -116,14 +129,17 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        //get all the topics, subjects and curriculums
+        //get all the topics, subjects, levels and curriculums
         await TopicService.GetTopics();
         await CurriculumService.GetCurricula();
         await SubjectService.GetSubjects();
+        await LevelService.GetLevels();
+
 
         topics= TopicService.Topics;
         subjects= SubjectService.Subjects;
         curriculums= CurriculumService.Curriculums;
+        levels= LevelService.Levels;
     }
 
     //filter the subjects based on the selected curriculum
@@ -156,9 +172,10 @@
     }
 
 
-    Func<Topic, string> topicConverter = p => p?.Name;
-    Func<Subject, string> subjectConverter = p => p?.Name;
-    Func<Curriculum, string> curriculumConverter = p => p?.Name;
+    Func<Topic, string> topicConverter = t => t?.Name;
+    Func<Subject, string> subjectConverter = s => s?.Name;
+    Func<Curriculum, string> curriculumConverter = c => c?.Name;
+    Func<Level, string> levelConverter = l => l?.Name;
 
 
 }

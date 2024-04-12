@@ -25,6 +25,8 @@
 
         </div>
 
+      
+
         <MudSelect Required T="Subject" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="TopicDto.SelectedTopics">
             @foreach (var subject in subjects)
             {
@@ -81,7 +83,7 @@
     }
 
 
-    Func<Subject, string> converter = p => p?.Name;
+    Func<Subject, string> converter = s => s?.Name;
 
    
 }

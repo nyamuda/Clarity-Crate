@@ -19,6 +19,7 @@ public class TermCreateDto
     [Required]
     public Curriculum? Curriculum { get; set; }
 
+    public IEnumerable<Level> SelectedLevels { get; set; } = new List<Level>();
 }
 
 
@@ -31,7 +32,6 @@ public class TermUpdateDto
     [Required]
     public string? Definition { get; set; }
 
-    [Required]
-    public int TopicId { get; set; }
+    public IEnumerable<Level> SelectedLevels { get; set; } = new List<Level>();
 
 }

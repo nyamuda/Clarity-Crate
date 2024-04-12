@@ -11,8 +11,10 @@
 
         public Definition? Definition { get; set; }
 
-        public List<Level> Levels { get; set; } = new List<Level>();
+        public IEnumerable<Level> Levels { get; set; } = new List<Level>();
 
 
     }
+
+
 }
