@@ -16,25 +16,11 @@
               OnCommitEditClick="@(() =>OnRowEditSave())" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
               RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked="@blockSwitch" ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">Periodic Elements</MudText>
+            <MudText Typo="Typo.h6">Terms and their definitions</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
-        <ColGroup>
-            @if (applyButtonPosition.DisplayApplyButtonAtStart() || (editButtonPosition.DisplayEditButtonAtStart() && editTrigger == TableEditTrigger.EditButton))
-            {
-                <col style="width:50px;" />
-            }
-            <col style="width:50px;" />
-            <col style="width:80px;" />
-            <col style="width:50%;" />
-            <col />
-            <col />
-            @if (applyButtonPosition.DisplayApplyButtonAtEnd() || (editButtonPosition.DisplayEditButtonAtEnd() && editTrigger == TableEditTrigger.EditButton))
-            {
-                <col style="width:50px;" />
-            }
-        </ColGroup>
+      
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<Term, object>(x=>x.Name)">Term</MudTableSortLabel></MudTh>
             <MudTh>Level</MudTh>
