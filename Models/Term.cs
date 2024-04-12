@@ -7,7 +7,11 @@
 
         public string? Name { get; set; }
 
-        public List<Definition>? Definitions { get; set; } = new List<Definition>();
+        public int DefinitionId { get; set; }
+
+        public Definition? Definition { get; set; }
+
+        public List<Level> Levels { get; set; } = new List<Level>();
 
 
     }

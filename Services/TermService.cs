@@ -45,7 +45,7 @@ namespace Clarity_Crate.Services
         {
             isGettingItems = !isGettingItems;
             //get all terms with their definitions
-            Terms = await _context.Term.Include(t => t.Definitions).ToListAsync();
+            Terms = await _context.Term.Include(t => t.Definition).ToListAsync();
             isGettingItems = !isGettingItems;
         }
 

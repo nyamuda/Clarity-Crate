@@ -10,34 +10,51 @@
 <div class="m-auto mt-3">
     <!--MudBlazor table that show a list of Terms -->
     <!--Each Term shows its subjects-->
-    <MudTable Items="Terms" Hover="true" Filter="new Func<Term,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <MudTable Items="Terms" Hover="true" Filter="new Func<Term,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1" CanCancelEdit="true"
+              OnCommitEditClick="@(() =>OnRowEditSave())" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+              RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked="@blockSwitch" ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Periodic Elements</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
+        <ColGroup>
+            @if (applyButtonPosition.DisplayApplyButtonAtStart() || (editButtonPosition.DisplayEditButtonAtStart() && editTrigger == TableEditTrigger.EditButton))
+            {
+                <col style="width:50px;" />
+            }
+            <col style="width:50px;" />
+            <col style="width:80px;" />
+            <col style="width:50%;" />
+            <col />
+            <col />
+            @if (applyButtonPosition.DisplayApplyButtonAtEnd() || (editButtonPosition.DisplayEditButtonAtEnd() && editTrigger == TableEditTrigger.EditButton))
+            {
+                <col style="width:50px;" />
+            }
+        </ColGroup>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<Term, object>(x=>x.Name)">Term</MudTableSortLabel></MudTh>
-            <MudTh>Definitions</MudTh>
-            <MudTh>Actions</MudTh>
+            <MudTh>Definition</MudTh>
+            <MudTh>Delete</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Term">@context.Name</MudTd>
-            <MudTd DataLabel="Definitions">
-                <!--Loop through the subjects-->
-                @foreach (var definitions in context.Definitions)
-                {
-                    <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@definitions.Content</MudChip>
-                }
-
+            <MudTd DataLabel="Definition">
+                <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@context.Definition.Content</MudChip>
             </MudTd>
-            <MudTd DataLabel="Actions">
-
-                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Edit" IconColor="Color.Primary" OnClick="@(() => Edit(context.Id))">Edit</MudButton>
+            <MudTd DataLabel="Delete">
                 <MudButton Class="ms-2" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => Delete(context.Id))">Delete</MudButton>
             </MudTd>
         </RowTemplate>
-
+        <RowEditingTemplate>
+            <MudTd DataLabel="Term"><MudTextField @bind-Value="@context.Name" Required /></MudTd>
+            <MudTd DataLabel="Definition">
+                <MudTextField @bind-Value="@context.Definition.Content" Required />
+            </MudTd>
+           
+        </RowEditingTemplate>
+        
         <PagerContent>
             <MudTablePager />
         </PagerContent>
@@ -58,10 +75,16 @@
     private List<Term> Terms = new List<Term>();
     private string searchString1 = "";
     private Term selectedItem1 = null;
+    private Term elementBeforeEdit;
 
 
     [Inject] private IDialogService DialogService { get; set; }
 
+    private bool blockSwitch = false;
+
+    private TableApplyButtonPosition applyButtonPosition = TableApplyButtonPosition.End;
+    private TableEditButtonPosition editButtonPosition = TableEditButtonPosition.End;
+    private TableEditTrigger editTrigger = TableEditTrigger.RowClick;
 
 
 
@@ -135,6 +158,36 @@
        
         return false;
     }
+
+    private void ResetItemToOriginalValues(object element)
+    {
+        ((Term)element).Name = elementBeforeEdit.Name;
+        ((Term)element).Definition = elementBeforeEdit.Definition;
+        
+    }
+
+    private void BackupItem(object element)
+    {
+        elementBeforeEdit = new()
+            {
+               
+                Name = ((Term)element).Name,
+                Definition= ((Term)element).Definition,
+                
+            };
+    }
+
+    private void ItemHasBeenCommitted(object element)
+    {
+       
+    }
+
+    private async Task OnRowEditSave()
+    {
+        await TermService.UpdateTerm(selectedItem1);
+        Snackbar.Add("Term updated successfully!", Severity.Success);
+    }
+
 
 
 

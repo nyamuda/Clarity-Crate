@@ -20,6 +20,8 @@ namespace Clarity_Crate.Data
         public DbSet<Term> Term { get; set; } = default!;
         public DbSet<Definition> Definition { get; set; } = default!;
 
+        public DbSet<Level> Level { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -62,12 +64,18 @@ namespace Clarity_Crate.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
 
-            //there is a one-many relationship between definition and term
+            //there is a one-one relationship between definition and term
             builder.Entity<Definition>()
                 .HasOne(d => d.Term)
-                .WithMany(t => t.Definitions)
-                .HasForeignKey(d => d.TermId)
+                .WithOne(t => t.Definition)
+                .HasForeignKey<Definition>(d => d.TermId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //there is a many-to-many relationship between term and level
+            builder.Entity<Term>()
+                .HasMany(t => t.Levels)
+                .WithMany(l => l.Terms)
+                .UsingEntity(j => j.ToTable("TermLevel"));
 
         }
     }
