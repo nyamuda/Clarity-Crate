@@ -29,7 +29,7 @@
 
         <div class="mb-3">
 
-            <MudTextField Required @bind-Value="TermDto.Definition"
+            <MudTextField AutoGrow HelperText="The definition of the term" Required @bind-Value="TermDto.Definition"
                           For="@(() => TermDto.Definition)"
                           Immediate="true"
                           Label="Definition" />
