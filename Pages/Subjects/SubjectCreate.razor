@@ -22,12 +22,15 @@
                           Immediate="true"
                           Label="Name" />
 
-            <MudSelect Dense="true" T="Curriculum" Label="Curriculums" Variant="Variant.Text" @bind-Value="SubjectCreateDto.Curriculum">
-                @foreach (Curriculum curriculum in Curriculums)
+            
+
+            <MudSelect Required T="Curriculum" Label="Subject" ToStringFunc="@converter" MultiSelection="true" @bind-SelectedValues="SubjectCreateDto.SelectedCurriculums">
+                @foreach (var curriculum in Curriculums)
                 {
-                    <MudSelectItem Value="@curriculum">@curriculum.Name</MudSelectItem>
+                    <MudSelectItem T="Curriculum" Value="@curriculum">@curriculum.Name</MudSelectItem>
                 }
             </MudSelect>
+
 
 
         </div>
@@ -47,17 +50,17 @@
 
     private async Task HandleValidSubmit()
     {
-        //add the new subject to the database
-        int curriculumId = SubjectCreateDto.Curriculum.Id;
+       
 
         Subject subject = new Subject
             {
                 Name = SubjectCreateDto.Name,
+                Curriculums=SubjectCreateDto.SelectedCurriculums.ToList()
 
             };
 
 
-        await SubjectService.CreateSubject(subject, curriculumId);
+        await SubjectService.CreateSubject(subject);
 
 
         //redirect to the subjects page
@@ -70,6 +73,10 @@
         await CurriculumService.GetCurricula();
         Curriculums = CurriculumService.Curriculums;
     }
+
+
+
+    Func<Curriculum, string> converter = c => c?.Name;
 
    
 }

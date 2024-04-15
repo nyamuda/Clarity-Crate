@@ -11,6 +11,9 @@ namespace Clarity_Crate.Dtos
         public string? Name { get; set; }
 
         [Required]
-        public Curriculum? Curriculum { get; set; }
+        public IEnumerable<Curriculum>? SelectedCurriculums { get; set; } = new List<Curriculum>();
     }
+
+
+
 }

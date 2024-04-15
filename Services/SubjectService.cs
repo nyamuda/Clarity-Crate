@@ -1,6 +1,7 @@
 ﻿using Clarity_Crate.Data;
 using Clarity_Crate.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Clarity_Crate.Services
 {
@@ -8,6 +9,7 @@ namespace Clarity_Crate.Services
     {
         private readonly ApplicationDbContext _context;
         public List<Subject> Subjects { get; set; }
+        public bool isGettingItems = false;
 
 
         public SubjectService(ApplicationDbContext context)
@@ -17,45 +19,18 @@ namespace Clarity_Crate.Services
 
 
 
-        public async Task CreateSubject(Subject subject, int curriculumId)
+        public async Task<bool> CreateSubject(Subject subject)
         {
-            //check if the curriculum exists
-            var curriculum = await _context.Curriculum.FindAsync(curriculumId);
-            if (curriculum == null) { return; }
-
-            //check the subject with the same name exists to avoid redundancy
-            var subjectExists = await _context.Subject
-               .FirstOrDefaultAsync(s => s.Name.ToLower().Trim() == subject.Name.ToLower().Trim());
-
-            if (subjectExists != null)
+            try
             {
-                //since a subject can have different curriculums
-                //check if the curriculum already exists for the subject that already exists
-                //by looping through the subject curriculums
-                foreach (var cur in subjectExists.Curriculums)
-                {
-                    if (cur.Id == curriculum.Id)
-                    {
-                        return;
-                    }
-
-                }
-
-                //if the curriculum does not exist for the subject
-                //add the curriculum to the subject
-                subjectExists.Curriculums.Add(curriculum);
-                await _context.SaveChangesAsync();
-            }
-
-
-            else
-            {
-
-                subject.Curriculums.Add(curriculum);
-
                 _context.Subject.Add(subject);
-
                 await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DBConcurrencyException ex)
+            {
+
+                return false;
             }
         }
 
@@ -68,15 +43,18 @@ namespace Clarity_Crate.Services
 
         public async Task GetSubjects()
         {
+            isGettingItems = !isGettingItems;
             //get subjects with their curriculum
             var subjects = await _context.Subject.Include(s => s.Curriculums).ToListAsync();
 
             Subjects = subjects;
+
+            isGettingItems = !isGettingItems;
         }
 
-        public async Task<Boolean> UpdateSubject(int id, Subject subject)
+        public async Task<Boolean> UpdateSubject(Subject subject)
         {
-            var itemExists = await _context.Subject.FindAsync(id);
+            var itemExists = await _context.Subject.FindAsync(subject.Id);
 
             if (itemExists == null)
             {
@@ -86,15 +64,16 @@ namespace Clarity_Crate.Services
             try
             {
                 itemExists.Name = subject.Name;
+                itemExists.Curriculums = subject.Curriculums;
 
 
                 await _context.SaveChangesAsync();
-                return false;
+                return true;
 
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                throw;
+                return false;
             }
         }
 
