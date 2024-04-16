@@ -60,6 +60,7 @@
                 <RowEditingTemplate>
                     <MudTd DataLabel="Term"><MudTextField @bind-Value="@context.Name" Required /></MudTd>
                     <MudTd DataLabel="Level">
+                        <!-- The attribute bind-SelectedValues requires an IEnumerable value-->
                         <MudSelect Required T="Level" Label="Level" ToStringFunc="@levelConverter" MultiSelection="true" @bind-SelectedValues="@context.Levels">
                             @foreach (var level in Levels)
                             {

@@ -55,6 +55,7 @@
                 <RowEditingTemplate>
                     <MudTd DataLabel="Subject"><MudTextField @bind-Value="@context.Name" Required /></MudTd>
                     <MudTd DataLabel="Curriculum">
+                        <!-- The attribute bind-SelectedValues requires an IEnumerable value-->
                         <MudSelect Required T="Curriculum" Label="Curriculum" ToStringFunc="@curriculumConverter" MultiSelection="true" @bind-SelectedValues="@context.Curriculums">
                             @foreach (var curriculum in Curriculums)
                             {
@@ -93,8 +94,8 @@
     [Inject] private IDialogService DialogService { get; set; }
 
 
+    //Table variables
     private bool blockSwitch = false;
-
     private Subject selectedItem1 = null;
     private string searchString1 = "";
     private Subject elementBeforeEdit;
@@ -144,15 +145,11 @@
 
 
     }
-    //edit method
-    private void Edit(int id)
-    {
-
-        //redirect to the edit page
-        NavigationManager.NavigateTo($"/subjects/edit/{id}");
-    }
-
     
+    
+
+  
+    //Table functions
 
     private bool FilterFunc(Subject element, string searchString)
     {
@@ -194,7 +191,7 @@
     {
         await SubjectService.UpdateSubject(selectedItem1);
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomCenter;
-        Snackbar.Add("Term updated successfully!", Severity.Success);
+        Snackbar.Add("Subject updated successfully!", Severity.Success);
     }
 
 

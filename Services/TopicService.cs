@@ -1,6 +1,7 @@
 ﻿using Clarity_Crate.Data;
 using Clarity_Crate.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Clarity_Crate.Services
 {
@@ -9,7 +10,7 @@ namespace Clarity_Crate.Services
         private readonly ApplicationDbContext _context;
         public List<Topic> Topics { get; set; } = new List<Topic>();
         public bool isProcessing = false;
-
+        public bool isGettingItems = false;
 
         public TopicService(ApplicationDbContext context)
         {
@@ -19,7 +20,9 @@ namespace Clarity_Crate.Services
 
         public async Task GetTopics()
         {
+            isGettingItems = !isGettingItems;
             Topics = await _context.Topic.Include(t => t.Subjects).ToListAsync();
+            isGettingItems = !isGettingItems;
 
         }
 
@@ -38,30 +41,45 @@ namespace Clarity_Crate.Services
         }
 
 
-        public async Task<Boolean> UpdateTopic(int id, Topic topic)
+        public async Task<Boolean> UpdateTopic(Topic topic)
         {
-            Topic topicExists = await _context.Topic.FindAsync(id);
-            if (topicExists != null)
+            try
             {
-                topicExists.Name = topic.Name;
-                topicExists.Subjects = topic.Subjects;
-                await _context.SaveChangesAsync();
-                return true;
-            }
+                Topic topicExists = await _context.Topic.FindAsync(topic.Id);
+                if (topicExists != null)
+                {
+                    topicExists.Name = topic.Name;
+                    topicExists.Subjects = topic.Subjects;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
 
-            return false;
+                return false;
+            }
+            catch (DBConcurrencyException e)
+            {
+                return false;
+            }
         }
 
         public async Task<Boolean> DeleteTopic(int id)
         {
-            var topic = await _context.Topic.FindAsync(id);
-            if (topic != null)
+            try
             {
-                _context.Topic.Remove(topic);
-                await _context.SaveChangesAsync();
-                return true;
+                Topic topic = await _context.Topic.FindAsync(id);
+                if (topic != null)
+                {
+                    _context.Topic.Remove(topic);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                return false;
             }
-            return false;
+            catch (DBConcurrencyException e)
+            {
+                return false;
+            }
         }
     }
 }
