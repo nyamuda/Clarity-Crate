@@ -19,6 +19,11 @@ As a software engineer, my goal is to leverage C# to build a functional and user
 -Web Framework: ASP.NET Core, Blazor 
 -Database: MS SQL Server
 
+ # Database EER Diagram
+ 
+ <img href='https://github.com/nyamuda/Clarity-Crate/blob/master/Data/EER%20Diagram.png'>
+ 
+
 
 # Useful Websites
 
