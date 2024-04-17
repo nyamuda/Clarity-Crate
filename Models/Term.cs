@@ -7,7 +7,6 @@
 
         public string? Name { get; set; }
 
-        public int DefinitionId { get; set; }
 
         public Definition? Definition { get; set; }
 

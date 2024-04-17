@@ -26,7 +26,7 @@ namespace Clarity_Crate.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            //there is a many to many relationship between subject and topic
+            //there is a many to many relationship between subject and curriculums
             //it should cascade on delete
             builder.Entity<Subject>()
                 .HasMany(s => s.Curriculums)
