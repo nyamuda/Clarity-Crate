@@ -13,6 +13,7 @@ namespace Clarity_Crate.Services
 
         public bool isAddingItem = false;
         public bool isUpdatingItem = false;
+        public bool isGettingItems = false;
 
         public LevelService(ApplicationDbContext context)
         {
@@ -22,7 +23,9 @@ namespace Clarity_Crate.Services
         //Get all levels
         public async Task GetLevels()
         {
+            isGettingItems = !isGettingItems;
             Levels = await _context.Level.ToListAsync();
+            isGettingItems = !isGettingItems;
         }
 
         //Get a level by id

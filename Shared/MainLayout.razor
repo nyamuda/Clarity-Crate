@@ -3,7 +3,7 @@
 
 <PageTitle>Clarity Crate</PageTitle>
 
-<MudThemeProvider />
+<MudThemeProvider Theme="_currentTheme" /> />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -20,14 +20,18 @@
                 <MudDrawerHeader>
                     <MudText Typo="Typo.h6">Clarity Crate</MudText>
                 </MudDrawerHeader>
-                <MudNavMenu>
-                    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-                    <MudNavLink Href="/curriculums" Match="NavLinkMatch.All">Curriculums</MudNavLink>
-                    <MudNavLink Href="/subjects" Match="NavLinkMatch.All">Subjects</MudNavLink>
-                    <MudNavLink Href="/topics" Match="NavLinkMatch.All">Topics</MudNavLink>
+                <MudNavMenu Color="Color.Info" Rounded="true">
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
 
-                    <MudNavLink Href="/terms" Match="NavLinkMatch.All">Terms</MudNavLink>
-                    <MudNavLink Href="/levels" Match="NavLinkMatch.All">Levels</MudNavLink>
+                    <MudNavGroup Title="Admin" @bind-Expanded=_isExpanded Icon="@Icons.Material.Filled.AdminPanelSettings">
+                        <MudNavLink Href="/curriculums" Match="NavLinkMatch.All">Curriculums</MudNavLink>
+                        <MudNavLink Href="/subjects" Match="NavLinkMatch.All">Subjects</MudNavLink>
+                        <MudNavLink Href="/topics" Match="NavLinkMatch.All">Topics</MudNavLink>
+
+                        <MudNavLink Href="/terms" Match="NavLinkMatch.All">Terms</MudNavLink>
+                        <MudNavLink Href="/levels" Match="NavLinkMatch.All">Levels</MudNavLink>
+                    </MudNavGroup>
+
 
                 </MudNavMenu>
             </MudDrawer>
@@ -37,7 +41,7 @@
                 </MudContainer>
             </MudMainContent>
 
-           
+
         </MudLayout>
 
     </main>
@@ -49,6 +53,7 @@
 
 @code {
     bool open = false;
+    bool _isExpanded = false;
 
     DrawerClipMode clipMode = DrawerClipMode.Docked;
 
@@ -56,4 +61,30 @@
     {
         open = !open;
     }
+
+    private readonly MudTheme _currentTheme = new()
+    {
+                    /*
+                    Palette = new PaletteLight
+                    {
+
+                        Primary = "#007bff", // Blue
+                        Secondary = "#6c757d", // Gray
+                        Info = "#17a2b8", // Cyan
+                        Success = "#28a745", // Green
+                        Warning = "#ffc107", // Yellow
+                        Error = "#dc3545", // Red
+                        AppbarBackground = "#212121", // Dark gray
+                        TextPrimary = "#212529", // Dark gray
+                        TextSecondary = "#6c757d", // Gray
+                    },
+                        Typography = new Typography()
+                    {
+                        Default = new Default()
+                        {
+                            FontFamily = new[] { "Poppins", "Helvetica", "Arial", "sans-serif" }
+                        }
+                    }
+                    */
+    };
 }

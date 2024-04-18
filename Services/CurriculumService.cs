@@ -10,6 +10,7 @@ namespace Clarity_Crate.Services
 
 
         public bool isProcessing = false;
+        public bool isGettingItems = false;
 
         public List<Curriculum> Curriculums { get; set; }
 
@@ -30,10 +31,12 @@ namespace Clarity_Crate.Services
 
         public async Task GetCurricula()
         {
+            isGettingItems = !isGettingItems;
             //they must include the subjects
             var curricula = await _context.Curriculum.Include(c => c.Subjects).ToListAsync();
 
             Curriculums = curricula;
+            isGettingItems = !isGettingItems;
         }
 
         public async Task<Boolean> UpdateCurriculum(int id, Curriculum curriculum)
