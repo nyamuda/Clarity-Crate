@@ -1,0 +1,79 @@
+﻿@page
+@model LoginModel
+
+<style>
+    /* Disable the outline for all form controls */
+    .form-control:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+</style>
+
+<section class=" text-center text-lg-start mt-5">
+
+    <div class="card mb-3">
+        <div class="row g-0 d-flex align-items-center">
+            <div class="col-lg-4 d-none d-lg-flex">
+                <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Trendy Pants and Shoes"
+                     class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+            </div>
+            <div class="col-lg-8">
+                <div class="card-body py-5 px-md-5">
+
+                    <form id="account" method="post">
+                        <h2>Sign in</h2>
+                        <hr />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="mb-3">
+                            <input asp-for="Input.Email" placeholder="Email" class="form-control form-control-lg" autocomplete="username" aria-required="true" />
+
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <input asp-for="Input.Password" placeholder="Password" class="form-control form-control-lg" autocomplete="current-password" aria-required="true" />
+
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-4">
+
+                            <div class="col d-flex justify-content-center">
+                                <div class="checkbox">
+                                    <label asp-for="Input.RememberMe" class="form-label">
+                                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+
+                                <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button id="login-submit" type="submit" class="w-100 btn btn-dark">Log in</button>
+                        </div>
+                        <div>
+
+                            <!--
+                            <p>
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                            </p>
+                            <p>
+                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                            </p>
+                            -->
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

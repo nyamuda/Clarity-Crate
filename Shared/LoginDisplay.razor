@@ -1,4 +1,5 @@
-﻿<AuthorizeView>
+﻿<!--
+<AuthorizeView>
     <Authorized>
         <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
         <form method="post" action="Identity/Account/LogOut">
@@ -10,3 +11,53 @@
         <a href="Identity/Account/Login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
+-->
+
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorized>
+            <div class="d-flex justify-content-evenly">
+
+                <MudMenu FullWidth="true">
+                    <ActivatorContent>
+                        <MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary">Account</MudChip>
+                    </ActivatorContent>
+                    <ChildContent>
+
+                        <!--<MudMenuItem Href="Identity/Account/Manage">Profile</MudMenuItem>-->
+
+                        <MudMenuItem>
+                            <form method="post" action="Identity/Account/LogOut">
+                                <button type="submit" class="">Log out</button>
+                                <MudButton ButtonType="ButtonType.Submit"
+                                           Variant="Variant.Outlined"
+                                           EndIcon="@Icons.Material.Filled.Logout"
+                                           Color="Color.Tertiary">
+                                    Log out
+                                </MudButton>
+                            </form>
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+
+
+
+            </div>
+
+
+        </Authorized>
+        <NotAuthorized>
+            
+            <MudButton Href="Identity/Account/Register" Variant="Variant.Text" DisableElevation="true" Class="text-white">Sign up</MudButton>
+            <MudButton Href="Identity/Account/Login"
+                       Variant="Variant.Outlined"
+                       EndIcon="@Icons.Material.Filled.Login"
+                       Color="Color.Tertiary">
+                Login
+            </MudButton>
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+
+</CascadingAuthenticationState>
