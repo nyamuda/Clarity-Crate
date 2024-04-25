@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Clarity Crate</title>
+    <title>Clarity Crate</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.css" />
@@ -20,33 +20,66 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/Identity/css/site.css" asp-append-version="true" />
     </environment>
+    <style>
+        /* Disable the outline for all form controls */
+        .form-control:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        body {
+            position: relative;
+            display: flex;
+            justify-content:space-between;
+            flex-direction: column;
+            height: 100vh;
+            margin-bottom:0 !important;
+        }
+
+        footer a {
+            text-decoration:none;
+        }
+
+      
+
+
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" href="~/">Clarity Crate</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+       
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light shadow px-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Clarity Crate</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    @{
-                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
-                    }
-                    @if (result.Success)
-                    {
-                        await Html.RenderPartialAsync("_LoginPartial");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    
+
+                    <div class="d-flex ms-auto align-items-center">
+
+
+                        @{
+                            var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+                        }
+                        @if (result.Success)
+                        {
+                            await Html.RenderPartialAsync("_LoginPartial");
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
                             "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
                             $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
-                    }
+                        }
+
+                    </div>
                 </div>
             </div>
         </nav>
+      
     </header>
 
     <div class="container">
@@ -55,17 +88,13 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="footer border-top pl-3 text-muted">
-        <div class="container">
-        &copy; 2024 - Clarity Crate
-            @{
-                var foundPrivacy = Url.Page("/Privacy", new { area = "" });
-            }
-            @if (foundPrivacy != null)
-            {
-                <a asp-area="" asp-page="/Privacy">Privacy</a>
-            }
+    <footer class="bg-body-tertiary text-center text-lg-start mt-5">
+        <!-- Copyright -->
+        <div class="text-center p-3" style="background-color:rgba(0, 0, 0, 0.05);">
+            © 2024 Copyright:
+            <a class="text-body fw-bold" href="/">ClarityCrate.com</a>
         </div>
+        <!-- Copyright -->
     </footer>
 
     <environment include="Development">
