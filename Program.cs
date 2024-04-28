@@ -28,6 +28,7 @@ builder.Services.AddScoped<CurriculumService>();
 builder.Services.AddScoped<TopicService>();
 builder.Services.AddScoped<TermService>();
 builder.Services.AddScoped<LevelService>();
+builder.Services.AddScoped<EmailSender>();
 
 
 
