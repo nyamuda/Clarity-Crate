@@ -1,26 +1,35 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
 
 
 namespace Clarity_Crate.Services
 {
-    public class EmailSender
+    public class EmailSender : IEmailSender
     {
+        private readonly ILogger _logger;
 
 
-        public async Task SendEmailAsync(string email, string subject)
+
+
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             try
             {
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Tatenda Nyamuda", "ptnrlab@gmail.com"));
-                message.To.Add(new MailboxAddress("Mrs. Chanandler Bong", email));
-                message.Subject = subject;
+                var messageToSend = new MimeMessage();
+                messageToSend.From.Add(new MailboxAddress("Tatenda Nyamuda", "ptnrlab@gmail.com"));
+                messageToSend.To.Add(new MailboxAddress("Mrs. Chanandler Bong", "ptnmath@gmail.com"));
+                messageToSend.Subject = subject;
 
-                message.Body = new TextPart("plain")
+                messageToSend.Body = new TextPart("plain")
+                {
+                    Text = message
+                };
+                /*
+                messageToSend.Body = new TextPart("plain")
                 {
                     Text = "Hey there my friend"
-                };
+                };*/
 
                 using (var client = new SmtpClient())
                 {
@@ -29,7 +38,7 @@ namespace Clarity_Crate.Services
                     // Note: only needed if the SMTP server requires authentication
                     client.Authenticate("ptnrlab@gmail.com", "vghw owdn uncx lnoq");
 
-                    client.Send(message);
+                    client.Send(messageToSend);
                     client.Disconnect(true);
                 }
             }

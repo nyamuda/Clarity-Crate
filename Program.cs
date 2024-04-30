@@ -1,4 +1,5 @@
 using Clarity_Crate.Areas.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Clarity_Crate.Data;
 using Clarity_Crate.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -28,7 +29,10 @@ builder.Services.AddScoped<CurriculumService>();
 builder.Services.AddScoped<TopicService>();
 builder.Services.AddScoped<TermService>();
 builder.Services.AddScoped<LevelService>();
-builder.Services.AddScoped<EmailSender>();
+//builder.Services.AddScoped<EmailSender>();
+
+//email verification
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 
 
