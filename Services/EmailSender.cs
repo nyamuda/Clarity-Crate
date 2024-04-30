@@ -21,9 +21,13 @@ namespace Clarity_Crate.Services
                 messageToSend.To.Add(new MailboxAddress("Mrs. Chanandler Bong", "ptnmath@gmail.com"));
                 messageToSend.Subject = subject;
 
-                messageToSend.Body = new TextPart("plain")
+
+                string wholeBody = GetEmailTemplate() + message;
+
+                //send the body as HTML
+                messageToSend.Body = new TextPart("html")
                 {
-                    Text = message
+                    Text = wholeBody
                 };
                 /*
                 messageToSend.Body = new TextPart("plain")
@@ -45,5 +49,27 @@ namespace Clarity_Crate.Services
             catch (Exception ex)
             { }
         }
+
+
+        //function will return HTML Code
+        private string GetEmailTemplate()
+        {
+            string body = string.Empty;
+            //using streamreader for reading my htmltemplate   
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmailTemplates", "ConfirmationEmail.html");
+            using (StreamReader reader = new StreamReader(path))
+            {
+                body = reader.ReadToEnd();
+            }
+
+
+            return body;
+        }
+
+
+
     }
+
+
+
 }
