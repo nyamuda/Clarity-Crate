@@ -7,8 +7,6 @@ namespace Clarity_Crate.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly ILogger _logger;
-
 
 
 
