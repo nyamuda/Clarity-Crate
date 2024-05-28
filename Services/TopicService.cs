@@ -81,5 +81,11 @@ namespace Clarity_Crate.Services
                 return false;
             }
         }
+
+        //get topcis for a particular subject
+        public async Task<List<Topic>> FilterTopicsBySubject(int subjectId)
+        {
+            return await _context.Topic.Where(t => t.Subjects.Any(s => s.Id == subjectId)).ToListAsync();
+        }
     }
 }

@@ -1,12 +1,100 @@
 ﻿@page "/"
-
+@using Clarity_Crate.Services
+@using Clarity_Crate.Models
 <PageTitle>Home</PageTitle>
 @inject NavigationManager NavigationManager
+@inject CurriculumService CurriculumService
+@inject SubjectService SubjectService
+@inject TopicService TopicService
+@inject LevelService LevelService
 
 
 <div class="container text-center py-5">
     <h1 class="display-4">Welcome to Clarity Crate</h1>
     <p class="lead">Master science concepts with ease and clarity</p>
-  
+
+
+    <div>
+        <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+    </div>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 mt-5">
+
+        <div class="col mb-2">
+            <MudSelect @bind-Value="SelectedCurriculum" T="Curriculum" Label="Select curriculum">
+                @foreach (var curriculum in curriculums)
+                {
+                    <MudSelectItem T="Curriculum" Value="@curriculum">@curriculum.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </div>
+
+        <div class="col mb-2">
+            <MudSelect @bind-Value="SelectedSubject" T="Subject" Label="Select subject">
+                @foreach (var subject in subjects)
+                {
+                    <MudSelectItem T="Subject" Value="@subject">@subject.Name</MudSelectItem>
+                }
+
+            </MudSelect>
+        </div>
+
+        <div class="col mb-2">
+            <MudSelect @bind-Value="SelectedTopic" T="Topic" Label="Select topic">
+                @foreach (var topic in topics)
+                {
+                    <MudSelectItem T="Topic" Value="@topic">@topic.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </div>
+
+        <div class="col mb-2">
+            <MudSelect @bind-Value="SelectedLevel" T="Level" Label="Select level">
+                @foreach (var level in levels)
+                {
+                    <MudSelectItem T="Level" Value="@level">@level.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </div>
+
+        <div class="col d-flex justify-content-start align-items-center">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterAlt" Color="Color.Dark" Size="Size.Medium">Filter</MudButton>
+        </div>
+
+    </div>
+
 </div>
 
+
+@code {
+    public string? Search { get; set; }
+    public Curriculum? SelectedCurriculum { get; set; }
+    public Subject? SelectedSubject { get; set; }
+    public Topic? SelectedTopic { get; set; }
+    public Level? SelectedLevel { get; set; }
+
+    private List<Curriculum> curriculums = new List<Curriculum>();
+    private List<Subject> subjects = new List<Subject>();
+    private List<Topic> topics = new List<Topic>();
+    private List<Level> levels = new List<Level>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //curriculums
+        await CurriculumService.GetCurricula();
+        curriculums = CurriculumService.Curriculums;
+
+        //subjects
+        await SubjectService.GetSubjects();
+        subjects = SubjectService.Subjects;
+
+        //topics
+        await TopicService.GetTopics();
+        topics = TopicService.Topics;
+
+        //levels
+        await LevelService.GetLevels();
+        levels = LevelService.Levels;
+
+    }
+}

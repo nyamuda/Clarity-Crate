@@ -47,14 +47,10 @@
 
         </Authorized>
         <NotAuthorized>
+            <MudButton Class="me-2" Href="Identity/Account/Login" Variant="Variant.Outlined">Login</MudButton>
             
-            <MudButton Href="Identity/Account/Register" Variant="Variant.Text" DisableElevation="true" Class="text-white">Sign up</MudButton>
-            <MudButton Href="Identity/Account/Login"
-                       Variant="Variant.Outlined"
-                       EndIcon="@Icons.Material.Filled.Login"
-                       Color="Color.Tertiary">
-                Login
-            </MudButton>
+            
+            <MudButton Href="Identity/Account/Register" Variant="Variant.Filled" Color="Color.Dark">Sign up</MudButton>
         </NotAuthorized>
     </AuthorizeView>
 

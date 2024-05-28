@@ -11,8 +11,8 @@
 
     <main>
         <MudLayout>
-            <MudAppBar Color="Color.Dark" Elevation="1">
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+            <MudAppBar Style="@($"background-color:{Colors.Grey.Lighten5};")">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Dark" Edge="Edge.Start" OnClick="@ToggleDrawer" />
                 <MudSpacer />
                 <LoginDisplay/>
                 <!-- <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor" Target="_blank" />-->
@@ -55,6 +55,7 @@
 @code {
     bool open = false;
     bool _isExpanded = false;
+  
 
     DrawerClipMode clipMode = DrawerClipMode.Docked;
 
