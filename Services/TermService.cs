@@ -97,15 +97,19 @@ namespace Clarity_Crate.Services
             isSearching = !isSearching;
             //get all terms with their definitions and levels
             //that match the search term, curriculum, subject, topic, and level
+            //keeping in mind that the search term can be empty
             var terms = await _context.Term
-                  .Include(t => t.Definition)
-                  .Include(t => t.Levels)
-                  .Where(t => t.Name.Contains(searchTerm) && t.Definition.CurriculumId == curriculumId && t.Definition.SubjectId == subjectId && t.Definition.TopicId == topicId && t.Levels.Any(l => l.Id == levelId))
-                  .ToListAsync();
+                .Include(t => t.Definition)
+                .Include(t => t.Levels)
+                .Where(t => t.Name.Contains(searchTerm) || searchTerm == "")
+                .Where(t => t.Definition.CurriculumId == curriculumId || curriculumId == 0)
+                .Where(t => t.Definition.SubjectId == subjectId || subjectId == 0)
+                .Where(t => t.Definition.TopicId == topicId || topicId == 0)
+                .Where(t => t.Levels.Any(l => l.Id == levelId) || levelId == 0)
+                .ToListAsync();
 
             isSearching = !isSearching;
             return terms;
-
 
 
         }

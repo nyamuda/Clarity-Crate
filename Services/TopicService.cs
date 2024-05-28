@@ -85,7 +85,8 @@ namespace Clarity_Crate.Services
         //get topcis for a particular subject
         public async Task<List<Topic>> FilterTopicsBySubject(int subjectId)
         {
-            return await _context.Topic.Where(t => t.Subjects.Any(s => s.Id == subjectId)).ToListAsync();
+            //keep in mind that the subjectId can be 0
+            return await _context.Topic.Where(t => t.Subjects.Any(s => s.Id == subjectId) || subjectId == 0).ToListAsync();
         }
     }
 }

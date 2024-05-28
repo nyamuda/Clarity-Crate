@@ -97,7 +97,8 @@ namespace Clarity_Crate.Services
         //get subjects for a particular curriculum
         public async Task<List<Subject>> FilterSubjectByCurriculum(int curriculumId)
         {
-            var subjects = await _context.Subject.Include(s => s.Curriculums).Where(s => s.Curriculums.Any(c => c.Id == curriculumId)).ToListAsync();
+            //keep in mind that the curriculumId can be 0
+            var subjects = await _context.Subject.Include(s => s.Curriculums).Where(s => s.Curriculums.Any(c => c.Id == curriculumId) || curriculumId == 0).ToListAsync();
 
             return subjects;
         }
