@@ -20,7 +20,7 @@
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 mt-5">
 
         <div class="col mb-2">
-            <MudSelect @bind-Value="SelectedCurriculum" T="Curriculum" Label="Select curriculum">
+            <MudSelect ValueChanged=" OnCurriculumChanged" T="Curriculum" Label="Select curriculum">
                 @foreach (var curriculum in curriculums)
                 {
                     <MudSelectItem T="Curriculum" Value="@curriculum">@curriculum.Name</MudSelectItem>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="col mb-2">
-            <MudSelect @bind-Value="SelectedSubject" T="Subject" Label="Select subject">
+            <MudSelect ValueChanged="OnSubjectChanged" T="Subject" Label="Select subject">
                 @foreach (var subject in subjects)
                 {
                     <MudSelectItem T="Subject" Value="@subject">@subject.Name</MudSelectItem>
@@ -57,7 +57,7 @@
         </div>
 
         <div class="col d-flex justify-content-start align-items-center">
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterAlt" Color="Color.Dark" Size="Size.Medium">Filter</MudButton>
+            <MudButton OnClick="Filter" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterAlt" Color="Color.Dark" Size="Size.Medium">Filter</MudButton>
         </div>
 
     </div>
@@ -96,5 +96,28 @@
         await LevelService.GetLevels();
         levels = LevelService.Levels;
 
+    }
+
+
+    public async Task OnCurriculumChanged(Curriculum curriculum)
+    {
+        SelectedCurriculum = curriculum;
+        //get the subjects for the selected curriculum
+        subjects=await SubjectService.FilterSubjectByCurriculum(curriculum.Id);
+    }
+
+    public async Task OnSubjectChanged(Subject subject)
+    {
+        SelectedSubject = subject;
+        //get the topics for the selected subject
+        topics = await TopicService.FilterTopicsBySubject(subject.Id);
+    }
+
+
+    public void Filter()
+    {
+        //filter the subjects
+        //filter the topics
+        //filter the levels
     }
 }
