@@ -10,6 +10,7 @@ namespace Clarity_Crate.Services
         public List<Term> Terms { get; set; } = new List<Term>();
         public bool isProcessing = false;
         public bool isGettingItems = false;
+        public bool isSearching = false;
 
         public TermService(ApplicationDbContext context)
         {
@@ -87,6 +88,40 @@ namespace Clarity_Crate.Services
             return false;
 
 
+        }
+
+        //Search for a term
+        //for a particular curriculum, subject, topic, and level
+        public async Task<List<Term>> FilterTerms(string searchTerm, int curriculumId, int subjectId, int topicId, int levelId)
+        {
+            isSearching = !isSearching;
+            //get all terms with their definitions and levels
+            //that match the search term, curriculum, subject, topic, and level
+            var terms = await _context.Term
+                  .Include(t => t.Definition)
+                  .Include(t => t.Levels)
+                  .Where(t => t.Name.Contains(searchTerm) && t.Definition.CurriculumId == curriculumId && t.Definition.SubjectId == subjectId && t.Definition.TopicId == topicId && t.Levels.Any(l => l.Id == levelId))
+                  .ToListAsync();
+
+            isSearching = !isSearching;
+            return terms;
+
+
+
+        }
+
+        public async Task<List<Term>> SearchTerm(string term)
+        {
+            isSearching = !isSearching;
+
+            var terms = await _context.Term
+                .Include(t => t.Definition)
+                .Include(t => t.Levels)
+                .Where(t => t.Name.Contains(term))
+                .ToListAsync();
+
+            isSearching = !isSearching;
+            return terms;
         }
 
     }

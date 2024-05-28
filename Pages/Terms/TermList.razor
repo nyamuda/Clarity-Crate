@@ -26,7 +26,7 @@
         else
         {
             <!--MudBlazor table that show a list of Terms -->
-            <!--Each Term shows its subjects-->
+            <!--Each Term shows its levels,and definition-->
             <MudTable Items="Terms" Hover="true" Filter="new Func<Term,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1" CanCancelEdit="true"
                       OnCommitEditClick="@(() =>OnRowEditSave())" RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
                       RowEditCommit="ItemHasBeenCommitted" IsEditRowSwitchingBlocked="@blockSwitch" ApplyButtonPosition="@applyButtonPosition" EditButtonPosition="@editButtonPosition" EditTrigger="@editTrigger">

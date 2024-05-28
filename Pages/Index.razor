@@ -7,15 +7,20 @@
 @inject SubjectService SubjectService
 @inject TopicService TopicService
 @inject LevelService LevelService
+@inject TermService TermService
 
 
 <div class="container text-center py-5">
     <h1 class="display-4">Welcome to Clarity Crate</h1>
     <p class="lead">Master science concepts with ease and clarity</p>
 
-
+    <!--Search terms-->
     <div>
-        <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+        <EditForm Model="@SearchItem" OnValidSubmit="SearchTerm">
+      
+            <MudTextField @bind-Value="Search" Label="Search"  Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Secondary" />
+      
+      </EditForm>
     </div>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 mt-5">
 
@@ -62,6 +67,57 @@
 
     </div>
 
+    <!--List Terms-->
+    @if (TermService.isSearching)
+    {
+        <MudProgressLinear Size="Size.Large" Color="Color.Primary" Indeterminate="true" Class="my-7 mt-12" />
+
+    }
+    else
+    {
+        @if (terms.Count == 0)
+        {
+            <div class="alert alert-info mt-4" role="alert">
+                <p class="mb-1">No terms found.</p>
+            </div>
+        }
+        else
+        {
+            <!--MudBlazor table that show a list of Terms -->
+            <!--Each Term shows its levels, subject, and definition-->
+            <MudTable Class="mt-5" Items="@terms" Dense="true" Bordered="true" Striped="true" @bind-SelectedItem="SelectedTerm">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Terms</MudText>
+                   
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Term</MudTh>
+                    <MudTh>Level</MudTh>
+                    <MudTh>Subject</MudTh>
+                    <MudTh>Curriculum</MudTh>
+                    <MudTh>Definition</MudTh>
+                   
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Term">@context.Name</MudTd>
+                    <MudTd DataLabel="Level">
+                        @foreach (var level in context.Levels)
+                        {
+                            <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@level.Name</MudChip>
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Subject">@context.Definition.Subject.Name</MudTd>
+                    <MudTd DataLabel="Position">@context.Definition.Curriculum.Name</MudTd>
+                    <MudTd DataLabel="Definition">@context.Definition.Content</MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+
+        }
+    }
+
 </div>
 
 
@@ -71,11 +127,14 @@
     public Subject? SelectedSubject { get; set; }
     public Topic? SelectedTopic { get; set; }
     public Level? SelectedLevel { get; set; }
+    public Term? SelectedTerm { get; set; }
+    public SearchItem SearchItem { get; set; } = new SearchItem();
 
     private List<Curriculum> curriculums = new List<Curriculum>();
     private List<Subject> subjects = new List<Subject>();
     private List<Topic> topics = new List<Topic>();
     private List<Level> levels = new List<Level>();
+    private List<Term> terms = new List<Term>();
 
 
     protected override async Task OnInitializedAsync()
@@ -99,25 +158,41 @@
     }
 
 
+    //get the subjects for the selected curriculum
     public async Task OnCurriculumChanged(Curriculum curriculum)
     {
         SelectedCurriculum = curriculum;
-        //get the subjects for the selected curriculum
-        subjects=await SubjectService.FilterSubjectByCurriculum(curriculum.Id);
+      
+        subjects = await SubjectService.FilterSubjectByCurriculum(curriculum.Id);
     }
 
+    //get the topics for the selected subject
     public async Task OnSubjectChanged(Subject subject)
     {
         SelectedSubject = subject;
-        //get the topics for the selected subject
+        
         topics = await TopicService.FilterTopicsBySubject(subject.Id);
     }
 
 
-    public void Filter()
+    //Filter terms
+    public async Task Filter()
     {
-        //filter the subjects
-        //filter the topics
-        //filter the levels
+        //get the ids of the selected
+        //curriculum, subject, topic and level
+        int curriculumId = SelectedCurriculum.Id;
+        int subjectId = SelectedSubject.Id;
+        int topicId = SelectedTopic.Id;
+        int levelId = SelectedLevel.Id;
+
+        //search for the term
+        terms = await TermService.FilterTerms(Search, curriculumId, subjectId, topicId, levelId);
+    }
+
+    //Search for a term
+    public async Task SearchTerm()
+    {
+        terms = await TermService.SearchTerm(Search);
+        
     }
 }
