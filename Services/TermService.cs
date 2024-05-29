@@ -90,7 +90,7 @@ namespace Clarity_Crate.Services
 
         }
 
-        //Search for a term
+        //Search for a term`
         //for a particular curriculum, subject, topic, and level
         public async Task<List<Term>> FilterTerms(string searchTerm, int curriculumId, int subjectId, int topicId, int levelId)
         {
@@ -121,7 +121,7 @@ namespace Clarity_Crate.Services
             var terms = await _context.Term
                 .Include(t => t.Definition)
                 .Include(t => t.Levels)
-                .Where(t => t.Name.Contains(term))
+                .Where(t => t.Name.Contains(term) || term == "")
                 .ToListAsync();
 
             isSearching = !isSearching;

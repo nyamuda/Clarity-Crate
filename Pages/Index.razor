@@ -25,7 +25,7 @@
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 mt-2">
 
         <div class="col mb-2">
-            <MudSelect ValueChanged=" OnCurriculumChanged" T="Curriculum" Label="Select curriculum" Clearable=true>
+            <MudSelect ValueChanged=" OnCurriculumChanged" T="Curriculum" Label="Select curriculum" Clearable=true Variant="Variant.Outlined">
                 @foreach (var curriculum in curriculums)
                 {
                     <MudSelectItem T="Curriculum" Value="@curriculum">@curriculum.Name</MudSelectItem>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="col mb-2">
-            <MudSelect ValueChanged="OnSubjectChanged" T="Subject" Label="Select subject" Clearable=true>
+            <MudSelect ValueChanged="OnSubjectChanged" T="Subject" Label="Select subject" Clearable=true Variant="Variant.Outlined">
                 @foreach (var subject in subjects)
                 {
                     <MudSelectItem T="Subject" Value="@subject">@subject.Name</MudSelectItem>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="col mb-2">
-            <MudSelect ValueChanged="OnTopicChanged" T="Topic" Label="Select topic" ToStringFunc="@topicConverter" Clearable=true>
+            <MudSelect ValueChanged="OnTopicChanged" T="Topic" Label="Select topic" ToStringFunc="@topicConverter" Clearable=true Variant="Variant.Outlined">
                 @foreach (var topic in topics)
                 {
                     <MudSelectItem T="Topic" Value="@topic">@topic.Name</MudSelectItem>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="col mb-2">
-            <MudSelect ValueChanged="OnLevelChanged" T="Level" Label="Select level" ToStringFunc="@levelConverter" Clearable=true>
+            <MudSelect ValueChanged="OnLevelChanged" T="Level" Label="Select level" ToStringFunc="@levelConverter" Clearable=true Variant="Variant.Outlined">
                 @foreach (var level in levels)
                 {
                     <MudSelectItem T="Level" Value="@level">@level.Name</MudSelectItem>
@@ -61,7 +61,7 @@
             </MudSelect>
         </div>
 
-        <div class="col d-flex justify-content-start align-items-center">
+        <div class="col d-flex justify-content-start mt-2 mt-md-0 align-items-center">
             <MudButton OnClick="Filter" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.FilterAlt" Color="Color.Dark" Size="Size.Medium">Filter</MudButton>
         </div>
 
@@ -91,23 +91,26 @@
 
                 </ToolBarContent>
                 <HeaderContent>
-                    <MudTh>Term</MudTh>
-                    <MudTh>Level</MudTh>
-                    <MudTh>Subject</MudTh>
-                    <MudTh>Curriculum</MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Term, object>(x=>x.Name)">Term</MudTableSortLabel></MudTh>
+                    <MudTh Class="d-none d-md-block">Level</MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Term, object>(x=>x.Definition.Topic.Name)">Topic</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Term, object>(x=>x.Definition.Subject.Name)">Subject</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<Term, object>(x=>x.Definition.Curriculum.Name)">Curriculum</MudTableSortLabel></MudTh>
                     <MudTh>Definition</MudTh>
 
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Term">@context.Name</MudTd>
-                    <MudTd DataLabel="Level">
+                  
+                    <MudTd Class="d-none d-md-block" DataLabel="Level">
                         @foreach (var level in context.Levels)
                         {
                             <MudChip Variant="Variant.Filled" Color="Color.Primary" Class="m-1">@level.Name</MudChip>
                         }
                     </MudTd>
+                    <MudTd DataLabel="Topic">@context.Definition.Topic.Name</MudTd>
                     <MudTd DataLabel="Subject">@context.Definition.Subject.Name</MudTd>
-                    <MudTd DataLabel="Position">@context.Definition.Curriculum.Name</MudTd>
+                    <MudTd DataLabel="Curriculum">@context.Definition.Curriculum.Name</MudTd>
                     <MudTd DataLabel="Definition">@context.Definition.Content</MudTd>
                 </RowTemplate>
                 <PagerContent>
@@ -122,7 +125,7 @@
 
 
 @code {
-    public string? Search { get; set; }
+    public string? Search { get; set; } = "";
     public Curriculum? SelectedCurriculum { get; set; } = new Curriculum();
     public Subject? SelectedSubject { get; set; } = new Subject();
     public Topic? SelectedTopic { get; set; } = new Topic();
